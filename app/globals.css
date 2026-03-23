@@ -54,7 +54,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--n2p-cyan); animation: blink 2s ease-in-out infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
 .hero h1 { font-family: var(--sans); font-size: clamp(40px, 5.5vw, 72px); font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; max-width: 840px; margin-bottom: 24px; color: var(--n2p-white); opacity: 0; animation: fadeUp 0.7s ease 0.25s forwards; position: relative; z-index: 1; }
-.hero h1 em { font-style: italic; background: var(--n2p-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero h1 em { font-style: italic; display: inline-block; background: var(--n2p-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; padding-right: 0.06em; }
 .hero-sub { font-size: 18px; font-weight: 400; color: rgba(255,255,255,0.7); max-width: 520px; margin-bottom: 48px; opacity: 0; animation: fadeUp 0.7s ease 0.4s forwards; position: relative; z-index: 1; }
 .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; opacity: 0; animation: fadeUp 0.7s ease 0.55s forwards; position: relative; z-index: 1; }
 .btn-primary { background: var(--n2p-gradient); color: var(--n2p-white); padding: 16px 34px; border-radius: 10px; font-family: var(--sans); font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: opacity 0.2s, transform 0.15s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
@@ -73,7 +73,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .analyzer-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(0,180,216,0.1) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 10% 60%, rgba(224,64,251,0.06) 0%, transparent 50%); }
 .analyzer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; position: relative; z-index: 1; }
 .analyzer-copy h2 { font-family: var(--sans); font-size: clamp(28px, 4vw, 48px); font-weight: 700; color: var(--n2p-white); line-height: 1.15; margin-bottom: 20px; letter-spacing: -0.02em; }
-.analyzer-copy h2 em { font-style: italic; background: var(--n2p-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.analyzer-copy h2 em { font-style: italic; display: inline-block; background: var(--n2p-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; padding-right: 0.06em; }
 .analyzer-copy p { color: rgba(255,255,255,0.65); font-size: 15px; line-height: 1.7; margin-bottom: 28px; }
 .analyzer-steps { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
 .analyzer-steps li { display: flex; align-items: flex-start; gap: 14px; color: rgba(255,255,255,0.75); font-size: 14px; line-height: 1.5; }
@@ -161,7 +161,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .cta-section { padding: 96px 48px; text-align: center; background: var(--n2p-navy); position: relative; overflow: hidden; }
 .cta-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,180,216,0.15) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 20% 80%, rgba(224,64,251,0.08) 0%, transparent 50%); }
 .cta-section h2 { font-family: var(--sans); font-size: clamp(32px, 5vw, 64px); font-weight: 700; color: var(--n2p-white); letter-spacing: -0.02em; max-width: 680px; margin: 0 auto 20px; line-height: 1.1; position: relative; z-index: 1; }
-.cta-section h2 em { font-style: italic; background: var(--n2p-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.cta-section h2 em { font-style: italic; display: inline-block; background: var(--n2p-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; padding-right: 0.06em; }
 .cta-section p { color: rgba(255,255,255,0.65); font-size: 17px; max-width: 440px; margin: 0 auto 40px; position: relative; z-index: 1; }
 .cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
 .btn-white { background: var(--n2p-white); color: var(--n2p-navy); padding: 16px 34px; border-radius: 10px; font-family: var(--sans); font-size: 15px; font-weight: 600; border: none; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.15s; display: inline-flex; align-items: center; gap: 8px; }
