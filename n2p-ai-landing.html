@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>net2phone AI — See Where AI Changes Everything for Your Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #0e0e0d; --ink2: #3a3a38; --ink3: #6b6b68; --ink4: #9e9e9a;
+    --paper: #f5f3ee; --paper2: #eceae4; --paper3: #e2dfd8;
+    --signal: #e84c2b; --signal-light: #fdf0ec; --signal-mid: #f5a38d;
+    --green: #1a6b45; --blue: #1a4fa0; --amber: #c47d12;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 48px; background: rgba(245,243,238,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid var(--paper3); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; color: var(--ink); text-decoration: none; }
+  .nav-logo-mark { width: 28px; height: 28px; border-radius: 7px; background: var(--signal); display: flex; align-items: center; justify-content: center; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 14px; color: var(--ink3); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { background: var(--ink) !important; color: var(--paper) !important; padding: 9px 20px; border-radius: 8px; font-weight: 500 !important; transition: background 0.2s !important; }
+  .nav-cta:hover { background: var(--signal) !important; color: #fff !important; }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 120px 48px 80px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(232,76,43,0.07) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 10% 80%, rgba(26,79,160,0.05) 0%, transparent 60%), radial-gradient(ellipse 40% 30% at 90% 70%, rgba(26,107,69,0.04) 0%, transparent 60%); }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: var(--signal-light); border: 1px solid var(--signal-mid); color: var(--signal); border-radius: 100px; padding: 6px 16px; font-size: 13px; font-weight: 500; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; position: relative; z-index: 1; }
+  .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--signal); animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .hero h1 { font-family: var(--serif); font-size: clamp(42px, 6vw, 80px); font-weight: 400; line-height: 1.08; letter-spacing: -0.02em; max-width: 840px; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.7s ease 0.25s forwards; position: relative; z-index: 1; }
+  .hero h1 em { font-style: italic; color: var(--signal); }
+  .hero-sub { font-size: 18px; font-weight: 300; color: var(--ink3); max-width: 520px; margin-bottom: 48px; opacity: 0; animation: fadeUp 0.7s ease 0.4s forwards; position: relative; z-index: 1; }
+  .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; opacity: 0; animation: fadeUp 0.7s ease 0.55s forwards; position: relative; z-index: 1; }
+  .btn-primary { background: var(--signal); color: #fff; padding: 15px 32px; border-radius: 10px; font-family: var(--sans); font-size: 15px; font-weight: 500; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary:hover { background: #c93d20; transform: translateY(-1px); }
+  .btn-secondary { background: transparent; color: var(--ink); padding: 15px 28px; border-radius: 10px; font-family: var(--sans); font-size: 15px; font-weight: 400; border: 1.5px solid var(--paper3); cursor: pointer; transition: border-color 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-secondary:hover { border-color: var(--ink3); }
+  .hero-proof { margin-top: 64px; display: flex; align-items: center; gap: 32px; opacity: 0; animation: fadeUp 0.7s ease 0.7s forwards; position: relative; z-index: 1; flex-wrap: wrap; justify-content: center; }
+  .proof-stat { text-align: center; }
+  .proof-stat-num { font-family: var(--serif); font-size: 36px; font-weight: 400; line-height: 1; }
+  .proof-stat-label { font-size: 12px; color: var(--ink4); margin-top: 4px; }
+  .proof-divider { width: 1px; height: 40px; background: var(--paper3); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ANALYZER */
+  .analyzer-section { background: var(--ink); padding: 96px 48px; position: relative; overflow: hidden; }
+  .analyzer-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(232,76,43,0.12) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 10% 60%, rgba(26,79,160,0.08) 0%, transparent 50%); }
+  .analyzer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; position: relative; z-index: 1; }
+  .analyzer-copy h2 { font-family: var(--serif); font-size: clamp(32px, 4vw, 52px); color: #fff; font-weight: 400; line-height: 1.1; margin-bottom: 20px; letter-spacing: -0.02em; }
+  .analyzer-copy h2 em { font-style: italic; color: var(--signal-mid); }
+  .analyzer-copy p { color: rgba(255,255,255,0.55); font-size: 15px; line-height: 1.7; margin-bottom: 28px; }
+  .analyzer-steps { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+  .analyzer-steps li { display: flex; align-items: flex-start; gap: 14px; color: rgba(255,255,255,0.75); font-size: 14px; line-height: 1.5; }
+  .step-badge { width: 24px; height: 24px; border-radius: 50%; background: rgba(232,76,43,0.2); border: 1px solid rgba(232,76,43,0.35); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--signal-mid); flex-shrink: 0; margin-top: 1px; }
+  .upload-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 28px; }
+  .upload-zone { border: 1.5px dashed rgba(255,255,255,0.18); border-radius: 12px; padding: 36px 20px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; margin-bottom: 16px; position: relative; }
+  .upload-zone:hover, .upload-zone.drag-over { border-color: var(--signal); background: rgba(232,76,43,0.06); }
+  .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .upload-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(232,76,43,0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+  .upload-zone h3 { color: #fff; font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+  .upload-zone p { color: rgba(255,255,255,0.35); font-size: 13px; }
+  .format-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .format-tag { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.45); padding: 3px 9px; border-radius: 5px; font-size: 12px; }
+  .upload-btn { width: 100%; background: var(--signal); color: #fff; border: none; padding: 13px; border-radius: 10px; font-family: var(--sans); font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+  .upload-btn:hover { background: #c93d20; }
+  .upload-privacy { display: flex; align-items: center; gap: 6px; margin-top: 10px; justify-content: center; color: rgba(255,255,255,0.28); font-size: 12px; }
+  .results-preview { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 22px; margin-top: 16px; display: none; }
+  .results-preview.visible { display: block; animation: fadeUp 0.4s ease; }
+  .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .results-title { color: #fff; font-size: 14px; font-weight: 500; }
+  .results-badge { background: rgba(26,107,69,0.2); border: 1px solid rgba(26,107,69,0.35); color: #4ade80; padding: 3px 10px; border-radius: 100px; font-size: 11px; }
+  .mini-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .mini-kpi { background: rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px; }
+  .mini-kpi-label { font-size: 10px; color: rgba(255,255,255,0.38); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .mini-kpi-val { font-size: 20px; font-weight: 500; }
+  .mini-kpi-val.red { color: #f87171; } .mini-kpi-val.amber { color: #fbbf24; } .mini-kpi-val.green { color: #4ade80; }
+  .results-btn { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); color: #fff; padding: 11px; border-radius: 8px; font-family: var(--sans); font-size: 14px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .results-btn:hover { background: rgba(255,255,255,0.15); }
+
+  /* FEATURES */
+  .features-section { padding: 96px 48px; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal); margin-bottom: 16px; }
+  .features-section h2 { font-family: var(--serif); font-size: clamp(28px, 4vw, 48px); font-weight: 400; letter-spacing: -0.02em; max-width: 500px; margin-bottom: 56px; line-height: 1.15; }
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .feature-card { background: var(--paper2); padding: 36px 32px; transition: background 0.2s; position: relative; overflow: hidden; }
+  .feature-card:hover { background: var(--paper3); }
+  .feature-card:first-child { border-radius: 16px 0 0 16px; }
+  .feature-card:last-child { border-radius: 0 16px 16px 0; }
+  .feature-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+  .feature-card h3 { font-size: 16px; font-weight: 500; margin-bottom: 10px; letter-spacing: -0.01em; }
+  .feature-card p { font-size: 14px; color: var(--ink3); line-height: 1.6; }
+  .feature-accent { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+  .feature-card:hover .feature-accent { transform: scaleX(1); }
+
+  /* AGENTS */
+  .agents-section { background: var(--paper2); padding: 96px 48px; }
+  .agents-inner { max-width: 1100px; margin: 0 auto; }
+  .agents-inner h2 { font-family: var(--serif); font-size: clamp(28px, 4vw, 48px); font-weight: 400; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.15; }
+  .agents-inner > p { color: var(--ink3); margin-bottom: 48px; font-size: 16px; }
+  .agents-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .agent-card { background: var(--paper); border-radius: 12px; padding: 24px 28px; border: 1px solid var(--paper3); transition: transform 0.2s, box-shadow 0.2s; }
+  .agent-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(14,14,13,0.08); }
+  .agent-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .agent-badge { padding: 3px 9px; border-radius: 5px; font-size: 11px; font-weight: 500; }
+  .agent-tag { font-size: 11px; color: var(--ink4); margin-left: auto; }
+  .agent-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+  .agent-card p { font-size: 13px; color: var(--ink3); line-height: 1.55; }
+  .agent-stat { display: inline-block; margin-top: 10px; background: var(--paper2); border-radius: 5px; padding: 3px 9px; font-size: 12px; color: var(--ink3); }
+  .agent-stat strong { color: var(--ink); font-weight: 500; }
+
+  /* PROOF */
+  .proof-section { padding: 96px 48px; max-width: 1100px; margin: 0 auto; }
+  .proof-section h2 { font-family: var(--serif); font-size: clamp(28px, 4vw, 48px); font-weight: 400; letter-spacing: -0.02em; margin-bottom: 48px; text-align: center; line-height: 1.15; }
+  .testimonials { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .testimonial { background: var(--paper2); border-radius: 12px; padding: 28px; }
+  .testimonial-quote { font-family: var(--serif); font-size: 17px; line-height: 1.55; color: var(--ink); margin-bottom: 20px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 10px; }
+  .author-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #fff; flex-shrink: 0; }
+  .author-name { font-size: 13px; font-weight: 500; }
+  .author-title { font-size: 12px; color: var(--ink4); }
+
+  /* CTA */
+  .cta-section { padding: 96px 48px; text-align: center; background: var(--ink); position: relative; overflow: hidden; }
+  .cta-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(232,76,43,0.15) 0%, transparent 70%); }
+  .cta-section h2 { font-family: var(--serif); font-size: clamp(32px, 5vw, 64px); color: #fff; font-weight: 400; letter-spacing: -0.02em; max-width: 680px; margin: 0 auto 20px; line-height: 1.1; position: relative; z-index: 1; }
+  .cta-section h2 em { font-style: italic; color: var(--signal-mid); }
+  .cta-section p { color: rgba(255,255,255,0.5); font-size: 17px; max-width: 440px; margin: 0 auto 40px; position: relative; z-index: 1; }
+  .cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+  .btn-white { background: #fff; color: var(--ink); padding: 15px 32px; border-radius: 10px; font-family: var(--sans); font-size: 15px; font-weight: 500; border: none; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-white:hover { background: #f0eeea; transform: translateY(-1px); }
+  .btn-outline-white { background: transparent; color: rgba(255,255,255,0.7); padding: 15px 28px; border-radius: 10px; font-family: var(--sans); font-size: 15px; border: 1.5px solid rgba(255,255,255,0.2); cursor: pointer; transition: border-color 0.2s, color 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-outline-white:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+  /* FOOTER */
+  footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.07); padding: 36px 48px; display: flex; align-items: center; justify-content: space-between; }
+  footer p { font-size: 13px; color: rgba(255,255,255,0.28); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: rgba(255,255,255,0.28); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: rgba(255,255,255,0.6); }
+
+  /* LOADING */
+  .loading-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(14,14,13,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
+  .loading-overlay.active { display: flex; }
+  .loading-spinner { width: 44px; height: 44px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--signal); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-steps { display: flex; flex-direction: column; gap: 10px; }
+  .loading-step { color: rgba(255,255,255,0.3); font-size: 13px; display: flex; align-items: center; gap: 10px; transition: color 0.3s; }
+  .loading-step.active { color: #fff; }
+  .loading-step-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); flex-shrink: 0; }
+  .loading-step.active .loading-step-dot { background: var(--signal); }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; z-index: 300; background: rgba(14,14,13,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 24px; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--paper); border-radius: 20px; width: 100%; max-width: 580px; max-height: 90vh; overflow-y: auto; padding: 40px; animation: modalIn 0.3s ease; }
+  @keyframes modalIn { from { opacity:0; transform: scale(0.96) translateY(10px); } to { opacity:1; transform: none; } }
+  .modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; }
+  .modal-close { background: none; border: none; cursor: pointer; color: var(--ink3); font-size: 18px; line-height: 1; padding: 4px; }
+  .modal-close:hover { color: var(--ink); }
+  .modal h2 { font-family: var(--serif); font-size: 28px; font-weight: 400; line-height: 1.15; }
+  .modal-sub { font-size: 14px; color: var(--ink3); margin-top: 6px; }
+  .form { display: flex; flex-direction: column; gap: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-size: 13px; font-weight: 500; color: var(--ink2); }
+  .form-group input, .form-group select { background: var(--paper2); border: 1.5px solid var(--paper3); border-radius: 8px; padding: 10px 13px; font-family: var(--sans); font-size: 14px; color: var(--ink); transition: border-color 0.2s; outline: none; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--signal); }
+  .form-submit { background: var(--signal); color: #fff; border: none; padding: 14px; border-radius: 10px; font-family: var(--sans); font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s; margin-top: 6px; }
+  .form-submit:hover { background: #c93d20; }
+  .form-note { font-size: 12px; color: var(--ink4); text-align: center; }
+
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero, .analyzer-section, .features-section, .agents-section, .proof-section, .cta-section { padding: 64px 24px; }
+    .hero { padding-top: 100px; }
+    .analyzer-inner { grid-template-columns: 1fr; gap: 40px; }
+    .features-grid { grid-template-columns: 1fr; gap: 2px; }
+    .feature-card:first-child { border-radius: 16px 16px 0 0; }
+    .feature-card:last-child { border-radius: 0 0 16px 16px; }
+    .agents-grid, .testimonials { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 24px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 3v5l3 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="8" r="6" stroke="#fff" stroke-width="1.3"/>
+      </svg>
+    </div>
+    net2phone AI
+  </a>
+  <div class="nav-links">
+    <a href="#analyzer">Free Analysis</a>
+    <a href="#agents">AI Agents</a>
+    <a href="#proof">Results</a>
+    <a href="#" class="nav-cta" onclick="openModal(); return false;">Talk to Sales</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">
+    <div class="eyebrow-dot"></div>
+    Now available for all net2phone accounts
+  </div>
+  <h1>Your calls are trying to tell you <em>something.</em></h1>
+  <p class="hero-sub">Upload your call history and get a free AI readiness report in seconds. See exactly where AI agents can recover missed revenue — with numbers from your actual data.</p>
+  <div class="hero-actions">
+    <a href="#analyzer" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11v1a2 2 0 002 2h8a2 2 0 002-2v-1" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Get my free AI report
+    </a>
+    <a href="#agents" class="btn-secondary">See what's possible</a>
+  </div>
+  <div class="hero-proof">
+    <div class="proof-stat">
+      <div class="proof-stat-num">35%</div>
+      <div class="proof-stat-label">avg. calls missed per account</div>
+    </div>
+    <div class="proof-divider"></div>
+    <div class="proof-stat">
+      <div class="proof-stat-num">2 min</div>
+      <div class="proof-stat-label">to get your full report</div>
+    </div>
+    <div class="proof-divider"></div>
+    <div class="proof-stat">
+      <div class="proof-stat-num">6 AI</div>
+      <div class="proof-stat-label">agents available today</div>
+    </div>
+  </div>
+</section>
+
+<!-- ANALYZER -->
+<section class="analyzer-section" id="analyzer">
+  <div class="analyzer-bg"></div>
+  <div class="analyzer-inner">
+    <div class="analyzer-copy">
+      <div class="section-label" style="color: var(--signal-mid);">Free CDR analysis</div>
+      <h2>Upload your call history. Get your <em>AI blueprint.</em></h2>
+      <p>Our AI analyzes your Call Detail Records and tells you exactly which agents would have the highest impact — with real numbers from your data, not industry averages.</p>
+      <ul class="analyzer-steps">
+        <li><div class="step-badge">1</div>Export your CDR from net2phone (or any UCaaS platform) as a CSV file</li>
+        <li><div class="step-badge">2</div>Upload it here — we detect missed calls, short calls, after-hours gaps, and repeat caller patterns</li>
+        <li><div class="step-badge">3</div>Receive a prioritized report with specific AI agent recommendations and expected ROI</li>
+      </ul>
+      <p style="font-size:13px;">Works with net2phone, RingCentral, 8x8, Zoom Phone, and any standard CDR export. No account access required.</p>
+    </div>
+
+    <div>
+      <div class="upload-card">
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" onchange="handleFile(this)">
+          <div class="upload-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v10M7 6l3-3 3 3" stroke="#e84c2b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="#e84c2b" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Drop your CDR file here</h3>
+          <p>or click to browse</p>
+        </div>
+        <div class="format-tags">
+          <span class="format-tag">CSV</span>
+          <span class="format-tag">XLSX</span>
+          <span class="format-tag">XLS</span>
+          <span class="format-tag">net2phone export</span>
+          <span class="format-tag">Any CDR format</span>
+        </div>
+        <button class="upload-btn" onclick="simulateAnalysis()">Analyze my calls →</button>
+        <div class="upload-privacy">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L2 3v3c0 2.5 1.8 4.3 4 5 2.2-.7 4-2.5 4-5V3L6 1z" stroke="currentColor" stroke-width="1" fill="none"/></svg>
+          Your data is never stored or shared
+        </div>
+      </div>
+
+      <div class="results-preview" id="resultsPreview">
+        <div class="results-header">
+          <div class="results-title">AI Readiness Report</div>
+          <span class="results-badge">Analysis complete</span>
+        </div>
+        <div class="mini-kpis">
+          <div class="mini-kpi"><div class="mini-kpi-label">Missed call rate</div><div class="mini-kpi-val red" id="missedRate">—</div></div>
+          <div class="mini-kpi"><div class="mini-kpi-label">Short calls (&lt;30s)</div><div class="mini-kpi-val amber" id="shortCalls">—</div></div>
+          <div class="mini-kpi"><div class="mini-kpi-label">After-hours gap</div><div class="mini-kpi-val amber" id="afterHours">—</div></div>
+          <div class="mini-kpi"><div class="mini-kpi-label">AI agents recommended</div><div class="mini-kpi-val green" id="agentsRec">—</div></div>
+        </div>
+        <button class="results-btn" onclick="openModal()">
+          Get the full report + talk to a specialist
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="section-label">How it works</div>
+  <h2>AI that works the way your business does</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#fdf0ec;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#e84c2b" stroke-width="1.4"/><path d="M7 10l2 2 4-4" stroke="#e84c2b" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>No rip-and-replace</h3>
+      <p>AI agents layer on top of your existing net2phone setup. Your numbers, queues, and routing stay exactly as they are. AI handles what it can; your team handles the rest.</p>
+      <div class="feature-accent" style="background: var(--signal);"></div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#e8eef9;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 5v5l3.5 3.5" stroke="#1a4fa0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="10" r="7" stroke="#1a4fa0" stroke-width="1.4"/></svg>
+      </div>
+      <h3>Live in days, not months</h3>
+      <p>Most AI agent deployments go live in 3–5 business days. We handle the setup; you approve the script. No professional services fee, no lengthy onboarding.</p>
+      <div class="feature-accent" style="background: #1a4fa0;"></div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#eaf5ee;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="#1a6b45" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="10" r="7" stroke="#1a6b45" stroke-width="1.4"/></svg>
+      </div>
+      <h3>Every call, accounted for</h3>
+      <p>After-hours calls, queue overflow, outbound follow-ups, voicemail triage — AI agents cover every gap so nothing falls through the cracks.</p>
+      <div class="feature-accent" style="background: #1a6b45;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section class="agents-section" id="agents">
+  <div class="agents-inner">
+    <div class="section-label">AI agent library</div>
+    <h2>Six agents. One platform.</h2>
+    <p>Each agent targets a specific gap in your setup. Deploy one or all of them — based on what your data actually shows.</p>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-card-header">
+          <span class="agent-badge" style="background:#fdf0ec; color:#9d3620;">After-Hours Agent</span>
+          <span class="agent-tag">Quick win</span>
+        </div>
+        <h3>Never miss a call at 5am or 7pm again</h3>
+        <p>Handles inbound calls outside business hours — answers FAQs, captures intent, schedules callbacks, escalates emergencies. No live agents required.</p>
+        <span class="agent-stat">Recovers <strong>50–70%</strong> of after-hours missed calls</span>
+      </div>
+      <div class="agent-card">
+        <div class="agent-card-header">
+          <span class="agent-badge" style="background:#e8eef9; color:#0c447c;">AI Routing Agent</span>
+          <span class="agent-tag">Quick win</span>
+        </div>
+        <h3>Route every caller to the right place, instantly</h3>
+        <p>Detects caller intent before routing. Eliminates transfers, misroutes, and wrong-department confusion that wastes your team's time.</p>
+        <span class="agent-stat">Reduces misrouted calls by <strong>60–80%</strong></span>
+      </div>
+      <div class="agent-card">
+        <div class="agent-card-header">
+          <span class="agent-badge" style="background:#fdf3e3; color:#7d4f0a;">Queue Assistant</span>
+          <span class="agent-tag">Quick win</span>
+        </div>
+        <h3>Convert hold time into self-service time</h3>
+        <p>During peak load, offers callers a callback, estimated wait, or self-service deflection. Keeps abandon rates low when your team is at capacity.</p>
+        <span class="agent-stat">Deflects <strong>20–40%</strong> of peak overflow</span>
+      </div>
+      <div class="agent-card">
+        <div class="agent-card-header">
+          <span class="agent-badge" style="background:#fdf0ec; color:#9d3620;">Re-engagement Agent</span>
+          <span class="agent-tag">Strategic</span>
+        </div>
+        <h3>Reach repeat callers before they call again</h3>
+        <p>Identifies customers who've called multiple times without resolution and proactively reaches out. Closes loops before frustration becomes churn.</p>
+        <span class="agent-stat">Eliminates <strong>30–50%</strong> of repeat contact volume</span>
+      </div>
+      <div class="agent-card">
+        <div class="agent-card-header">
+          <span class="agent-badge" style="background:#eaf5ee; color:#1a6b45;">Outbound Agent</span>
+          <span class="agent-tag">Strategic</span>
+        </div>
+        <h3>Scale outbound without scaling your team</h3>
+        <p>Runs automated campaigns for reminders, surveys, follow-ups, and collections — at your current connect rate, 5–10x the volume.</p>
+        <span class="agent-stat">Scale outbound by <strong>5–10x</strong> at same connect rate</span>
+      </div>
+      <div class="agent-card">
+        <div class="agent-card-header">
+          <span class="agent-badge" style="background:#f0eeff; color:#3c3489;">Netty Virtual Agent</span>
+          <span class="agent-tag">Strategic</span>
+        </div>
+        <h3>A fully autonomous front-line voice agent</h3>
+        <p>Netty handles complex multi-turn conversations — account lookups, scheduling, order status, tier-1 support — without a human in the loop.</p>
+        <span class="agent-stat">Handles <strong>40–60%</strong> of inbound volume autonomously</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section class="proof-section" id="proof">
+  <h2>Results that show up in the numbers</h2>
+  <div class="testimonials">
+    <div class="testimonial">
+      <p class="testimonial-quote">"We were missing 30% of our after-hours calls. Three days after deploying the After-Hours Agent, that number was zero. Our team didn't change a thing."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:#1a4fa0;">MR</div>
+        <div><div class="author-name">Marcus R.</div><div class="author-title">Operations Director, Logistics</div></div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-quote">"The CDR analysis alone was worth it. I had no idea 40% of our answered calls were under 10 seconds. That's a routing problem we didn't know we had."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:#1a6b45;">SC</div>
+        <div><div class="author-name">Sandra C.</div><div class="author-title">IT Manager, Healthcare group</div></div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-quote">"We moved to the AI plan because of the outbound agent. We're running 3x the follow-up volume on the same team. ROI showed up in the first month."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:#c47d12;">JT</div>
+        <div><div class="author-name">James T.</div><div class="author-title">VP Sales, Insurance brokerage</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <h2>Your next customer is calling <em>right now.</em></h2>
+  <p>Start with the free CDR analysis — or talk to an AI specialist about deploying your first agent this week.</p>
+  <div class="cta-actions">
+    <a href="#analyzer" class="btn-white">Get my free AI report</a>
+    <a href="#" class="btn-outline-white" onclick="openModal(); return false;">Talk to an AI specialist</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 net2phone. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Support</a>
+    <a href="#">net2phone.com</a>
+  </div>
+</footer>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-steps">
+    <div class="loading-step active" id="ls1"><div class="loading-step-dot"></div>Parsing call records...</div>
+    <div class="loading-step" id="ls2"><div class="loading-step-dot"></div>Detecting missed call patterns...</div>
+    <div class="loading-step" id="ls3"><div class="loading-step-dot"></div>Analyzing peak load windows...</div>
+    <div class="loading-step" id="ls4"><div class="loading-step-dot"></div>Mapping AI agent opportunities...</div>
+    <div class="loading-step" id="ls5"><div class="loading-step-dot"></div>Generating your report...</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2>Talk to an AI specialist</h2>
+        <p class="modal-sub">We'll review your report together and recommend the right agents for your business.</p>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form">
+      <div class="form-row">
+        <div class="form-group"><label>First name</label><input type="text" placeholder="Alex"></div>
+        <div class="form-group"><label>Last name</label><input type="text" placeholder="Chen"></div>
+      </div>
+      <div class="form-group"><label>Work email</label><input type="email" placeholder="alex@company.com"></div>
+      <div class="form-group"><label>Company</label><input type="text" placeholder="Your company name"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone</label><input type="tel" placeholder="+1 (555) 000-0000"></div>
+        <div class="form-group"><label>Team size</label>
+          <select>
+            <option value="">Select...</option>
+            <option>1–10 employees</option>
+            <option>11–50 employees</option>
+            <option>51–200 employees</option>
+            <option>200+ employees</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Current phone system</label>
+        <select>
+          <option value="">Select...</option>
+          <option>net2phone (current customer)</option>
+          <option>RingCentral</option>
+          <option>8x8</option>
+          <option>Zoom Phone</option>
+          <option>Microsoft Teams Phone</option>
+          <option>Other / Not sure</option>
+        </select>
+      </div>
+      <button class="form-submit">Request my AI consultation →</button>
+      <p class="form-note">A specialist will reach out within 1 business day. No sales pressure.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); if (e.dataTransfer.files[0]) simulateAnalysis(); });
+  function handleFile(i) { if (i.files[0]) simulateAnalysis(); }
+
+  function simulateAnalysis() {
+    const ov = document.getElementById('loadingOverlay');
+    ov.classList.add('active');
+    const ids = ['ls1','ls2','ls3','ls4','ls5'];
+    let i = 0;
+    const iv = setInterval(() => {
+      if (i > 0) document.getElementById(ids[i-1]).classList.remove('active');
+      if (i < ids.length) { document.getElementById(ids[i]).classList.add('active'); i++; }
+      else { clearInterval(iv); setTimeout(() => { ov.classList.remove('active'); showResults(); }, 500); }
+    }, 650);
+  }
+
+  function showResults() {
+    animateVal('missedRate', 34.9, '%');
+    animateVal('shortCalls', 77.7, '%');
+    animateVal('afterHours', 42.0, '%');
+    document.getElementById('agentsRec').textContent = '4';
+    const p = document.getElementById('resultsPreview');
+    p.classList.add('visible');
+    p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function animateVal(id, to, suffix) {
+    const el = document.getElementById(id);
+    const start = Date.now(); const dur = 1000;
+    const tick = () => {
+      const t = Math.min(1, (Date.now() - start) / dur);
+      const e = 1 - Math.pow(1-t, 3);
+      el.textContent = (to * e).toFixed(1) + suffix;
+      if (t < 1) requestAnimationFrame(tick); else el.textContent = to + suffix;
+    };
+    tick();
+  }
+
+  function openModal() { document.getElementById('modalOverlay').classList.add('active'); document.body.style.overflow = 'hidden'; }
+  function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); document.body.style.overflow = ''; }
+  function closeOutside(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'none'; } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.feature-card, .agent-card, .testimonial').forEach(el => {
+    el.style.opacity = '0'; el.style.transform = 'translateY(16px)'; el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    obs.observe(el);
+  });
+</script>
+</body>
+</html>
