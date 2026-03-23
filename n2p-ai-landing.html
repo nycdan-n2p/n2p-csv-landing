@@ -95,7 +95,8 @@
   .feature-card:hover { background: var(--paper3); }
   .feature-card:first-child { border-radius: 16px 0 0 16px; }
   .feature-card:last-child { border-radius: 0 16px 16px 0; }
-  .feature-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+  .feature-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 10px 24px rgba(0,31,63,0.08); border: 1px solid rgba(0,31,63,0.08); }
+  .feature-icon svg { width: 24px; height: 24px; display: block; }
   .feature-card h3 { font-size: 16px; font-weight: 500; margin-bottom: 10px; letter-spacing: -0.01em; }
   .feature-card p { font-size: 14px; color: var(--ink3); line-height: 1.6; }
   .feature-accent { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
@@ -313,24 +314,24 @@
   <h2>AI that works the way your business does</h2>
   <div class="features-grid">
     <div class="feature-card">
-      <div class="feature-icon" style="background:#fdf0ec;">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#e84c2b" stroke-width="1.4"/><path d="M7 10l2 2 4-4" stroke="#e84c2b" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="feature-icon" style="background:linear-gradient(135deg, rgba(0,180,216,0.2), rgba(0,180,216,0.08)); color:#00b4d8;">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="7" width="7" height="10" rx="2" fill="currentColor" opacity="0.92"/><rect x="13" y="5" width="7" height="14" rx="2" fill="currentColor" opacity="0.24"/><path d="M8 12h8" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
       </div>
       <h3>No rip-and-replace</h3>
       <p>AI agents layer on top of your existing net2phone setup. Your numbers, queues, and routing stay exactly as they are. AI handles what it can; your team handles the rest.</p>
       <div class="feature-accent" style="background: var(--signal);"></div>
     </div>
     <div class="feature-card">
-      <div class="feature-icon" style="background:#e8eef9;">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 5v5l3.5 3.5" stroke="#1a4fa0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="10" r="7" stroke="#1a4fa0" stroke-width="1.4"/></svg>
+      <div class="feature-icon" style="background:linear-gradient(135deg, rgba(224,64,251,0.2), rgba(124,58,237,0.1)); color:#b423d6;">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13.5 3.5L6.5 13h4l-1 7.5 8-11.5h-4z" fill="currentColor"/></svg>
       </div>
-      <h3>Live in days, not months</h3>
-      <p>Most AI agent deployments go live in 3–5 business days. We handle the setup; you approve the script. No professional services fee, no lengthy onboarding.</p>
+      <h3>Live in minutes, not months</h3>
+      <p>Build and deploy your agent in minutes. And we're always here to help — custom build your agent with our team whenever you need it.</p>
       <div class="feature-accent" style="background: #1a4fa0;"></div>
     </div>
     <div class="feature-card">
-      <div class="feature-icon" style="background:#eaf5ee;">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="#1a6b45" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="10" r="7" stroke="#1a6b45" stroke-width="1.4"/></svg>
+      <div class="feature-icon" style="background:linear-gradient(135deg, rgba(124,58,237,0.2), rgba(0,180,216,0.08)); color:#6d38de;">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l7 3.2v5.3c0 4.2-2.6 7.9-7 9.5-4.4-1.6-7-5.3-7-9.5V6.2z" fill="currentColor" opacity="0.2"/><path d="M12 3l7 3.2v5.3c0 4.2-2.6 7.9-7 9.5-4.4-1.6-7-5.3-7-9.5V6.2z" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 12.1l2.3 2.3 4.8-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <h3>Every call, accounted for</h3>
       <p>After-hours calls, queue overflow, outbound follow-ups, voicemail triage — AI agents cover every gap so nothing falls through the cracks.</p>

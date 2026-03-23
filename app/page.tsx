@@ -501,10 +501,11 @@ export default function HomePage() {
         <h2>AI that works the way your business does</h2>
         <div className="features-grid">
           <div className="feature-card">
-            <div className="feature-icon" style={{ background: "rgba(0,180,216,0.12)", color: "#00b4d8" }}>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="10" cy="10" r="7" />
-                <path d="M7 10l2 2 4-4" />
+            <div className="feature-icon" style={{ background: "linear-gradient(135deg, rgba(0,180,216,0.2), rgba(0,180,216,0.08))", color: "#00b4d8" }}>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="4" y="7" width="7" height="10" rx="2" fill="currentColor" opacity="0.92" />
+                <rect x="13" y="5" width="7" height="14" rx="2" fill="currentColor" opacity="0.24" />
+                <path d="M8 12h8" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
               </svg>
             </div>
             <h3>No rip-and-replace</h3>
@@ -515,24 +516,24 @@ export default function HomePage() {
             <div className="feature-accent" />
           </div>
           <div className="feature-card">
-            <div className="feature-icon" style={{ background: "rgba(224,64,251,0.12)", color: "#e040fb" }}>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M10 5v5l3.5 3.5" />
-                <circle cx="10" cy="10" r="7" />
+            <div className="feature-icon" style={{ background: "linear-gradient(135deg, rgba(224,64,251,0.2), rgba(124,58,237,0.1))", color: "#b423d6" }}>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M13.5 3.5L6.5 13h4l-1 7.5 8-11.5h-4z" fill="currentColor" />
               </svg>
             </div>
-            <h3>Live in days, not months</h3>
+            <h3>Live in minutes, not months</h3>
             <p>
-              Most AI agent deployments go live in 3–5 business days. We handle the setup; you
-              approve the script. No professional services fee, no lengthy onboarding.
+              Build and deploy your agent in minutes. And we&apos;re always here to help — custom build
+              your agent with our team whenever you need it.
             </p>
             <div className="feature-accent" />
           </div>
           <div className="feature-card">
-            <div className="feature-icon" style={{ background: "rgba(124,58,237,0.12)", color: "#7c3aed" }}>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 10l3 3 7-7" />
-                <circle cx="10" cy="10" r="7" />
+            <div className="feature-icon" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.2), rgba(0,180,216,0.08))", color: "#6d38de" }}>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3l7 3.2v5.3c0 4.2-2.6 7.9-7 9.5-4.4-1.6-7-5.3-7-9.5V6.2z" fill="currentColor" opacity="0.2" />
+                <path d="M12 3l7 3.2v5.3c0 4.2-2.6 7.9-7 9.5-4.4-1.6-7-5.3-7-9.5V6.2z" stroke="currentColor" strokeWidth="1.8" />
+                <path d="M8.5 12.1l2.3 2.3 4.8-5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <h3>Every call, accounted for</h3>
