@@ -34,7 +34,7 @@ A landing page where visitors can upload their Call Detail Records (CDR) for fre
 
 ## Features
 
-- **CDR analysis**: Upload a CSV export from net2phone, RingCentral, 8x8, Zoom Phone, or any UCaaS. The AI analyzes patterns and recommends which agents (After-Hours, AI Routing, Queue Assistant, Re-engagement, Outbound, Netty) would help most.
+- **CDR analysis**: Upload a CSV export from net2phone, RingCentral, 8x8, Zoom Phone, or any UCaaS. The AI analyzes patterns and recommends which agents would help most for calling gaps — or create any agent you need on net2phone AI.
 - **Lead submission**: When visitors request a consultation, the AI summary (not raw data) plus contact info is sent to HubSpot and/or your webhook.
 - **Rate limiting**: 5 analyses per IP per hour for the public endpoint.
 

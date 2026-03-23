@@ -1,6 +1,6 @@
 /**
  * Landing-page-specific CDR analysis prompt.
- * Returns AI agent recommendations (which of the 6 agents to deploy).
+ * Returns AI agent recommendations for calling-related gaps. Users can create any agent on net2phone AI.
  */
 
 const LANDING_AGENTS = [
@@ -9,7 +9,7 @@ const LANDING_AGENTS = [
   "Queue Assistant",
   "Re-engagement Agent",
   "Outbound Agent",
-  "Netty Virtual Agent",
+  "Virtual Agent",
 ] as const;
 
 export function buildLandingCdrPrompt(csv: string): string {
@@ -23,7 +23,7 @@ Available AI agents to recommend:
 3. Queue Assistant — for queue overflow, abandon rates, peak load
 4. Re-engagement Agent — for repeat callers without resolution
 5. Outbound Agent — for outbound volume needs
-6. Netty Virtual Agent — for complex inbound volume, tier-1 support
+6. Virtual Agent — for complex inbound volume, tier-1 support
 
 Return ONLY a valid JSON object — no explanation, no markdown fences, no extra text.
 
@@ -31,14 +31,14 @@ Required output fields:
 - missedRate: number — percentage of calls that were missed/not answered (0–100)
 - shortCallsPct: number — percentage of calls under 30 seconds (0–100)
 - afterHoursPct: number — percentage of calls outside typical business hours 9–17 (0–100)
-- agentsRecommended: number — how many of the 6 agents to recommend (1–6)
+- agentsRecommended: number — how many agents to recommend (1–6)
 - recommendedAgents: array of strings — exact names from the list above. Match patterns:
   * After-hours missed calls → "After-Hours Agent"
   * Misrouting/transfers → "AI Routing Agent"
   * Queue overflow/abandon → "Queue Assistant"
   * Repeat callers → "Re-engagement Agent"
   * Outbound volume → "Outbound Agent"
-  * Complex inbound volume → "Netty Virtual Agent"
+  * Complex inbound volume → "Virtual Agent"
 - insights: array of strings — up to 5 key observations (complete sentences)
 - summary: string — 3–5 sentences explaining what the data shows and why these agents would help. Be specific and tie recommendations to the numbers.
 

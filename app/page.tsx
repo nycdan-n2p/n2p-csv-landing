@@ -18,7 +18,7 @@ const ALL_AGENTS = [
   "Queue Assistant",
   "Re-engagement Agent",
   "Outbound Agent",
-  "Netty Virtual Agent",
+  "Virtual Agent",
 ] as const;
 
 export default function HomePage() {
@@ -299,8 +299,8 @@ export default function HomePage() {
           </div>
           <div className="proof-divider" />
           <div className="proof-stat">
-            <div className="proof-stat-num">6 AI</div>
-            <div className="proof-stat-label">agents available today</div>
+            <div className="proof-stat-num">AI</div>
+            <div className="proof-stat-label">agents you can build</div>
           </div>
         </div>
       </section>
@@ -548,10 +548,10 @@ export default function HomePage() {
       <section className="agents-section" id="agents">
         <div className="agents-inner">
           <div className="section-label">AI agent library</div>
-          <h2>Six agents. One platform.</h2>
+          <h2>Popular agents for calling. Or build any agent you need.</h2>
           <p>
-            Each agent targets a specific gap in your setup. Deploy one or all of them — based on
-            what your data actually shows.
+            These six are common starting points for call-related gaps. Based on your CDR, we recommend
+            which make sense — but you can create any AI agent on net2phone AI.
           </p>
           <div className="agents-grid">
             <div className="agent-card">
@@ -637,13 +637,13 @@ export default function HomePage() {
             <div className="agent-card">
               <div className="agent-card-header">
                 <span className="agent-badge" style={{ background: "rgba(124,58,237,0.15)", color: "#7c3aed" }}>
-                  Netty Virtual Agent
+                  Virtual Agent
                 </span>
                 <span className="agent-tag">Strategic</span>
               </div>
               <h3>A fully autonomous front-line voice agent</h3>
               <p>
-                Netty handles complex multi-turn conversations — account lookups, scheduling,
+                net2phone AI handles complex multi-turn conversations — account lookups, scheduling,
                 order status, tier-1 support — without a human in the loop.
               </p>
               <span className="agent-stat">
@@ -777,7 +777,7 @@ export default function HomePage() {
             <div>
               <h2 id="modalTitle">Create your agent now</h2>
               <p className="modal-sub">
-                Choose which agent to build and we&apos;ll get you started.
+                Start with a CDR recommendation or pick any agent — you can build whatever you need.
               </p>
             </div>
             <button type="button" className="modal-close" onClick={closeModal} aria-label="Close">
@@ -791,7 +791,7 @@ export default function HomePage() {
           ) : (
             <form className="form" onSubmit={handleModalSubmit}>
               <div className="form-group">
-                <label htmlFor="selectedAgent">Which agent would you like to get started with?</label>
+                <label htmlFor="selectedAgent">Which agent would you like to build? (or start with a recommendation)</label>
                 <select id="selectedAgent" name="selectedAgent" required>
                   <option value="">Select an agent...</option>
                   {(analysisResult?.recommendedAgents?.length ? analysisResult.recommendedAgents : [...ALL_AGENTS]).map((agent) => (
