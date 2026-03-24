@@ -281,76 +281,78 @@ export default function HomePage() {
           </div>
 
           <div>
-            <div className="upload-card">
-              <div
-                id="uploadZone"
-                className="upload-zone"
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  e.currentTarget.classList.add("drag-over");
-                }}
-                onDragLeave={(e) => e.currentTarget.classList.remove("drag-over")}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".csv,text/csv"
-                  className="sr-only"
-                  onChange={handleFileSelect}
-                  aria-hidden
-                />
-                <div className="upload-icon">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            {!analysisResult && (
+              <div className="upload-card">
+                <div
+                  id="uploadZone"
+                  className="upload-zone"
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.add("drag-over");
+                  }}
+                  onDragLeave={(e) => e.currentTarget.classList.remove("drag-over")}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".csv,text/csv"
+                    className="sr-only"
+                    onChange={handleFileSelect}
+                    aria-hidden
+                  />
+                  <div className="upload-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path
+                        d="M10 3v10M7 6l3-3 3 3"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3 13v2a2 2 0 002 2h10a2 2 0 002-2v-2"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+                  <h3>Drop your CDR file here</h3>
+                  <p>or click to browse</p>
+                </div>
+                <div className="format-tags">
+                  <span className="format-tag">CSV</span>
+                  <span className="format-tag">net2phone export</span>
+                  <span className="format-tag">Any CDR format</span>
+                </div>
+                <button
+                  type="button"
+                  className="upload-btn"
+                  onClick={handleAnalyzeClick}
+                  disabled={loading}
+                >
+                  {loading ? "Analyzing…" : "Analyze my calls →"}
+                </button>
+                {analysisError && (
+                  <div className="upload-error" role="alert">
+                    {analysisError}
+                  </div>
+                )}
+                <div className="upload-privacy">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path
-                      d="M10 3v10M7 6l3-3 3 3"
+                      d="M6 1L2 3v3c0 2.5 1.8 4.3 4 5 2.2-.7 4-2.5 4-5V3L6 1z"
                       stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M3 13v2a2 2 0 002 2h10a2 2 0 002-2v-2"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
+                      strokeWidth="1"
+                      fill="none"
                     />
                   </svg>
+                  Your data is never stored or shared
                 </div>
-                <h3>Drop your CDR file here</h3>
-                <p>or click to browse</p>
               </div>
-              <div className="format-tags">
-                <span className="format-tag">CSV</span>
-                <span className="format-tag">net2phone export</span>
-                <span className="format-tag">Any CDR format</span>
-              </div>
-              <button
-                type="button"
-                className="upload-btn"
-                onClick={handleAnalyzeClick}
-                disabled={loading}
-              >
-                {loading ? "Analyzing…" : "Analyze my calls →"}
-              </button>
-              {analysisError && (
-                <div className="upload-error" role="alert">
-                  {analysisError}
-                </div>
-              )}
-              <div className="upload-privacy">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path
-                    d="M6 1L2 3v3c0 2.5 1.8 4.3 4 5 2.2-.7 4-2.5 4-5V3L6 1z"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    fill="none"
-                  />
-                </svg>
-                Your data is never stored or shared
-              </div>
-            </div>
+            )}
 
             <div className="results-preview" id="resultsPreview">
               <div className="results-header">
@@ -752,8 +754,8 @@ export default function HomePage() {
             <div className="starter-callout">
               <strong>What happens next</strong>
               <p>
-                We&apos;ll ask a few clarifying questions, collect the company details Flex needs,
-                then build the agent from this same net2phone-branded flow.
+                We&apos;ll ask a few clarifying questions, gather the business details we need to
+                personalize your agent, then complete the build right here in one guided experience.
               </p>
             </div>
             {starterError && (

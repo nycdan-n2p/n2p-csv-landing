@@ -246,8 +246,8 @@ export function AccountStep({
         <span className="onboarding-kicker">Step 2</span>
         <h2>Tell us who this agent is being built for</h2>
         <p>
-          This matches the Flex flow: company details first, then email and phone confirmation
-          before the build can start.
+          A quick business profile helps us tailor your agent to your company. We&apos;ll confirm
+          your email and phone so your build stays secure and we can reach you when it&apos;s ready.
         </p>
       </div>
 
