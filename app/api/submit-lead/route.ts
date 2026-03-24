@@ -7,6 +7,7 @@ export interface LeadPayload {
     email?: string;
     company?: string;
     phone?: string;
+    website?: string;
     teamSize?: string;
     phoneSystem?: string;
   };
@@ -19,6 +20,11 @@ export interface LeadPayload {
     afterHoursPct?: number;
     agentsCount?: number;
   };
+  onboarding?: {
+    generatedIntent?: string;
+    answers?: Record<string, string>;
+    questions?: Array<{ id?: string; text?: string }>;
+  };
 }
 
 export async function POST(req: NextRequest) {
@@ -29,7 +35,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  const { contact = {}, selectedAgent = "", analysis = {} } = body;
+  const { contact = {}, selectedAgent = "", analysis = {}, onboarding = {} } = body;
   const pageUri = req.headers.get("referer") ?? req.headers.get("origin") ?? "";
 
   const webhookPayload = {
@@ -41,6 +47,7 @@ export async function POST(req: NextRequest) {
       email: contact.email ?? "",
       company: contact.company ?? "",
       phone: contact.phone ?? "",
+      website: contact.website ?? "",
       teamSize: contact.teamSize ?? "",
       phoneSystem: contact.phoneSystem ?? "",
     },
@@ -52,6 +59,11 @@ export async function POST(req: NextRequest) {
       shortCallsPct: analysis.shortCallsPct,
       afterHoursPct: analysis.afterHoursPct,
       agentsCount: analysis.agentsCount,
+    },
+    onboarding: {
+      generatedIntent: onboarding.generatedIntent ?? "",
+      answers: onboarding.answers ?? {},
+      questions: onboarding.questions ?? [],
     },
   };
 
@@ -69,6 +81,7 @@ export async function POST(req: NextRequest) {
         { name: "lastname", value: contact.lastName ?? "" },
         { name: "company", value: contact.company ?? "" },
         { name: "phone", value: contact.phone ?? "" },
+        { name: "website", value: contact.website ?? "" },
         { name: "team_size", value: contact.teamSize ?? "" },
         { name: "phone_system", value: contact.phoneSystem ?? "" },
         { name: "selected_agent", value: selectedAgent ?? "" },
@@ -76,6 +89,13 @@ export async function POST(req: NextRequest) {
         { name: "agents_recommended", value: (analysis.recommendedAgents ?? []).join(", ") },
         { name: "missed_rate", value: String(analysis.missedRate ?? "") },
         { name: "short_calls_pct", value: String(analysis.shortCallsPct ?? "") },
+        { name: "agent_build_intent", value: onboarding.generatedIntent ?? "" },
+        {
+          name: "agent_clarifying_answers",
+          value: Object.entries(onboarding.answers ?? {})
+            .map(([key, value]) => `${key}: ${value}`)
+            .join(" | "),
+        },
       ].filter((f) => f.value);
 
       const res = await fetch(

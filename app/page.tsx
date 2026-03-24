@@ -1,25 +1,10 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect } from "react";
+import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
+import { type AnalysisSnapshot, ALL_AGENTS } from "@/lib/onboarding";
 
-export interface AnalysisResult {
-  missedRate: number;
-  shortCallsPct: number;
-  afterHoursPct: number;
-  agentsRecommended: number;
-  recommendedAgents: string[];
-  summary: string;
-  insights?: string[];
-}
-
-const ALL_AGENTS = [
-  "After-Hours Agent",
-  "AI Routing Agent",
-  "Queue Assistant",
-  "Re-engagement Agent",
-  "Outbound Agent",
-  "Virtual Agent",
-] as const;
+type AnalysisResult = AnalysisSnapshot;
 
 export default function HomePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,9 +14,9 @@ export default function HomePage() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [analysisError, setAnalysisError] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [formSubmitting, setFormSubmitting] = useState(false);
-  const [formSuccess, setFormSuccess] = useState(false);
-  const [formError, setFormError] = useState("");
+  const [starterAgent, setStarterAgent] = useState("");
+  const [starterError, setStarterError] = useState("");
+  const [onboardingAgent, setOnboardingAgent] = useState("");
 
   const runAnalysis = useCallback(async (file: File) => {
     if (!file.name.endsWith(".csv") && file.type !== "text/csv") {
@@ -150,89 +135,44 @@ export default function HomePage() {
     }
   }, [analysisResult, loading, showResults]);
 
-  const handleModalSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleModalSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const selectedAgent = (form.querySelector("#selectedAgent") as HTMLSelectElement)?.value ?? "";
     if (!selectedAgent) {
-      setFormError("Please select an agent.");
+      setStarterError("Please select an agent.");
       return;
     }
-    const contact = {
-      firstName: (form.querySelector("#firstName") as HTMLInputElement)?.value ?? "",
-      lastName: (form.querySelector("#lastName") as HTMLInputElement)?.value ?? "",
-      email: (form.querySelector("#email") as HTMLInputElement)?.value ?? "",
-      company: (form.querySelector("#company") as HTMLInputElement)?.value ?? "",
-      phone: (form.querySelector("#phone") as HTMLInputElement)?.value ?? "",
-      teamSize: (form.querySelector("#teamSize") as HTMLSelectElement)?.value ?? "",
-      phoneSystem: (form.querySelector("#phoneSystem") as HTMLSelectElement)?.value ?? "",
-    };
-
-    setFormSubmitting(true);
-    setFormError("");
-
-    try {
-      const res = await fetch("/api/submit-lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contact,
-          selectedAgent,
-          analysis: analysisResult
-            ? {
-                summary: analysisResult.summary,
-                recommendedAgents: analysisResult.recommendedAgents,
-                missedRate: analysisResult.missedRate,
-                shortCallsPct: analysisResult.shortCallsPct,
-                afterHoursPct: analysisResult.afterHoursPct,
-                agentsCount: analysisResult.agentsRecommended,
-              }
-            : undefined,
-        }),
-      });
-
-      const json = await res.json();
-
-      if (!res.ok) {
-        throw new Error(json.error ?? "Submission failed");
-      }
-
-      setFormSuccess(true);
-
-      const promptBase = `Build the ${selectedAgent}`;
-      const promptWithContext = analysisResult?.summary
-        ? `${promptBase}. CDR analysis context: ${analysisResult.summary.slice(0, 200)}${analysisResult.summary.length > 200 ? "…" : ""}`
-        : promptBase;
-      const flexUrl = (process.env.NEXT_PUBLIC_FLEX_APP_URL ?? "https://flex.net2phone.com") + "#prompt=" + encodeURIComponent(promptWithContext);
-
-      setTimeout(() => {
-        window.location.href = flexUrl;
-      }, 800);
-    } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Submission failed");
-    } finally {
-      setFormSubmitting(false);
-    }
+    setStarterError("");
+    setStarterAgent(selectedAgent);
+    setOnboardingAgent(selectedAgent);
+    setModalOpen(false);
   };
 
   const openModal = () => {
     setModalOpen(true);
-    if (typeof document !== "undefined") document.body.style.overflow = "hidden";
+    setStarterAgent(
+      analysisResult?.recommendedAgents?.[0] || starterAgent || ALL_AGENTS[0]
+    );
   };
   const closeModal = () => {
     setModalOpen(false);
-    if (typeof document !== "undefined") document.body.style.overflow = "";
+    setStarterError("");
   };
   const closeOutside = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) closeModal();
   };
 
-  // Restore body scroll when modal closes (e.g. via success timeout)
   useEffect(() => {
-    if (!modalOpen && typeof document !== "undefined") {
-      document.body.style.overflow = "";
+    if (typeof document !== "undefined") {
+      document.body.style.overflow = modalOpen || Boolean(onboardingAgent) ? "hidden" : "";
     }
-  }, [modalOpen]);
+    return () => {
+      if (typeof document !== "undefined") {
+        document.body.style.overflow = "";
+      }
+    };
+  }, [modalOpen, onboardingAgent]);
 
   return (
     <>
@@ -778,101 +718,63 @@ export default function HomePage() {
             <div>
               <h2 id="modalTitle">Create your agent now</h2>
               <p className="modal-sub">
-                Start with a CDR recommendation or pick any agent — you can build whatever you need.
+                Start with a CDR recommendation or pick any agent, then continue through the same
+                guided build flow inside this experience.
               </p>
             </div>
             <button type="button" className="modal-close" onClick={closeModal} aria-label="Close">
               ✕
             </button>
           </div>
-          {formSuccess ? (
-            <div className="form-success">
-              Redirecting you to build your agent...
-            </div>
-          ) : (
-            <form className="form" onSubmit={handleModalSubmit}>
-              <div className="form-group">
-                <label htmlFor="selectedAgent">Which agent would you like to build? (or start with a recommendation)</label>
-                <select id="selectedAgent" name="selectedAgent" required>
-                  <option value="">Select an agent...</option>
-                  {(analysisResult?.recommendedAgents?.length ? analysisResult.recommendedAgents : [...ALL_AGENTS]).map((agent) => (
-                    <option key={agent} value={agent}>
-                      {agent}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="firstName">First name</label>
-                  <input id="firstName" type="text" placeholder="Alex" name="firstName" />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="lastName">Last name</label>
-                  <input id="lastName" type="text" placeholder="Chen" name="lastName" />
-                </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Work email</label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="alex@company.com"
-                  name="email"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="company">Company</label>
-                <input id="company" type="text" placeholder="Your company name" name="company" />
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="phone">Phone</label>
-                  <input id="phone" type="tel" placeholder="+1 (555) 000-0000" name="phone" />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="teamSize">Team size</label>
-                  <select id="teamSize" name="teamSize">
-                    <option value="">Select...</option>
-                    <option value="1-10">1–10 employees</option>
-                    <option value="11-50">11–50 employees</option>
-                    <option value="51-200">51–200 employees</option>
-                    <option value="200+">200+ employees</option>
-                  </select>
-                </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="phoneSystem">Current phone system</label>
-                <select id="phoneSystem" name="phoneSystem">
-                  <option value="">Select...</option>
-                  <option value="net2phone">net2phone (current customer)</option>
-                  <option value="RingCentral">RingCentral</option>
-                  <option value="8x8">8x8</option>
-                  <option value="Zoom Phone">Zoom Phone</option>
-                  <option value="Microsoft Teams">Microsoft Teams Phone</option>
-                  <option value="Other">Other / Not sure</option>
-                </select>
-              </div>
-              {formError && (
-                <div className="upload-error" role="alert">
-                  {formError}
-                </div>
-              )}
-              <button
-                type="submit"
-                className="form-submit"
-                disabled={formSubmitting}
+          <form className="form" onSubmit={handleModalSubmit}>
+            <div className="form-group">
+              <label htmlFor="selectedAgent">
+                Which agent would you like to build? (or start with a recommendation)
+              </label>
+              <select
+                id="selectedAgent"
+                name="selectedAgent"
+                required
+                value={starterAgent}
+                onChange={(e) => setStarterAgent(e.target.value)}
               >
-                {formSubmitting ? "Sending…" : "Continue to build your agent →"}
-              </button>
-              <p className="form-note">
-                You&apos;ll be redirected to flex.net2phone.com to build your agent.
+                <option value="">Select an agent...</option>
+                {(analysisResult?.recommendedAgents?.length
+                  ? Array.from(new Set([...analysisResult.recommendedAgents, ...ALL_AGENTS]))
+                  : [...ALL_AGENTS]
+                ).map((agent) => (
+                  <option key={agent} value={agent}>
+                    {agent}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="starter-callout">
+              <strong>What happens next</strong>
+              <p>
+                We&apos;ll ask a few clarifying questions, collect the company details Flex needs,
+                then build the agent from this same net2phone-branded flow.
               </p>
-            </form>
-          )}
+            </div>
+            {starterError && (
+              <div className="upload-error" role="alert">
+                {starterError}
+              </div>
+            )}
+            <button type="submit" className="form-submit">
+              Continue to the guided build flow →
+            </button>
+            <p className="form-note">No redirect. You stay inside this experience.</p>
+          </form>
         </div>
       </div>
+      {onboardingAgent && (
+        <OnboardingFlow
+          selectedAgent={onboardingAgent}
+          analysis={analysisResult}
+          onClose={() => setOnboardingAgent("")}
+        />
+      )}
     </>
   );
 }
