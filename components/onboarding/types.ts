@@ -9,8 +9,6 @@ export interface BuildAgentResponse {
   success: boolean;
   mode: "live" | "draft";
   displayName: string;
-  generatedIntent: string;
-  promptPreview: string;
   statusMessage: string;
   agentId?: string;
   companyPhoneNumber?: string;

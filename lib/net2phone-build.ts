@@ -3,8 +3,7 @@ const TOKEN_EXCHANGE_TIMEOUT_MS = 15_000;
 
 export interface Net2PhoneBuildContact {
   email: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   companyName: string;
   phoneNumber: string;
 }
@@ -29,6 +28,14 @@ export function hasNet2PhoneBuildConfig(): boolean {
   return Boolean(process.env.NET2PHONE_SIGN_UP_URL?.trim());
 }
 
+function splitFullName(fullName: string): { firstName: string; lastName: string } {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  return {
+    firstName: parts[0] ?? "",
+    lastName: parts.slice(1).join(" ") || ".",
+  };
+}
+
 async function signUpCustomer(payload: Net2PhoneBuildContact): Promise<{ apiKey: string; phoneNumber: string }> {
   const url = process.env.NET2PHONE_SIGN_UP_URL?.trim();
   if (!url) {
@@ -39,6 +46,7 @@ async function signUpCustomer(payload: Net2PhoneBuildContact): Promise<{ apiKey:
   const timeoutId = setTimeout(() => controller.abort(), SIGN_UP_TIMEOUT_MS);
 
   try {
+    const { firstName, lastName } = splitFullName(payload.fullName);
     const res = await fetch(url, {
       method: "POST",
       headers: {
@@ -47,8 +55,8 @@ async function signUpCustomer(payload: Net2PhoneBuildContact): Promise<{ apiKey:
       },
       body: JSON.stringify({
         email: payload.email,
-        firstName: payload.firstName,
-        lastName: payload.lastName,
+        firstName,
+        lastName,
         companyName: payload.companyName,
         phoneNumber: payload.phoneNumber,
         freeTrialType: "AI Agent",

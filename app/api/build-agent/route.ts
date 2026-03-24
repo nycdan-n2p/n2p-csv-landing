@@ -14,6 +14,8 @@ import {
   hasNet2PhoneBuildConfig,
   Net2PhoneBuildError,
 } from "@/lib/net2phone-build";
+import { parseEmail } from "@/lib/validation/email";
+import { parsePhone } from "@/lib/validation/phone";
 
 export const maxDuration = 120;
 
@@ -41,6 +43,26 @@ function wrapAsJqPrompt(text: string): string {
   return `"${JQ_DATE_PREFIX}${escapeForJq(text)}"`;
 }
 
+function isValidCompanyWebsite(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+
+  const normalized = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  try {
+    const parsed = new URL(normalized);
+    return (
+      (parsed.protocol === "http:" || parsed.protocol === "https:") &&
+      parsed.hostname.includes(".")
+    );
+  } catch {
+    return false;
+  }
+}
+
+function hasTwoWordName(value: string): boolean {
+  return value.trim().split(/\s+/).filter(Boolean).length >= 2;
+}
+
 function buildPromptGenerationRequest(params: {
   selectedAgent: string;
   contact: OnboardingContact;
@@ -62,8 +84,8 @@ function buildPromptGenerationRequest(params: {
 Write a clean, deployment-ready prompt for a ${params.selectedAgent}.
 
 Company:
-- Name: ${params.contact.company}
-- Website: ${params.contact.website?.trim() || "Not provided"}
+- Name: ${params.contact.companyName}
+- Website: ${params.contact.companyWebsite.trim() || "Not provided"}
 
 Agent build brief:
 ${params.generatedIntent}
@@ -121,6 +143,8 @@ export async function POST(req: NextRequest) {
     questions?: unknown;
     answers?: OnboardingAnswers;
     contact?: OnboardingContact;
+    emailVerified?: boolean;
+    phoneVerified?: boolean;
   };
 
   try {
@@ -136,9 +160,40 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "selectedAgent is required." }, { status: 400 });
   }
 
-  if (!contact?.firstName || !contact?.lastName || !contact?.email || !contact?.company || !contact?.phone) {
+  if (
+    !contact?.fullName ||
+    !contact?.email ||
+    !contact?.companyName ||
+    !contact?.phone ||
+    !contact?.companyWebsite
+  ) {
     return NextResponse.json(
-      { error: "firstName, lastName, email, company, and phone are required." },
+      { error: "fullName, email, phone, companyName, and companyWebsite are required." },
+      { status: 400 }
+    );
+  }
+
+  if (!hasTwoWordName(contact.fullName)) {
+    return NextResponse.json({ error: "Full name must include at least two words." }, { status: 400 });
+  }
+
+  if (!isValidCompanyWebsite(contact.companyWebsite)) {
+    return NextResponse.json({ error: "A valid company website is required." }, { status: 400 });
+  }
+
+  try {
+    parseEmail(contact.email);
+    parsePhone(contact.phone);
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Contact details are invalid." },
+      { status: 400 }
+    );
+  }
+
+  if (!body.emailVerified || !body.phoneVerified) {
+    return NextResponse.json(
+      { error: "Email and phone verification are required before building." },
       { status: 400 }
     );
   }
@@ -146,10 +201,10 @@ export async function POST(req: NextRequest) {
   const questions = normalizeQuestionShape(body.questions, selectedAgent);
   const answers = body.answers ?? {};
   const generatedIntent = buildAgentIntent(selectedAgent, body.analysis ?? null, questions, answers);
-  const displayName = buildAgentDisplayName(selectedAgent, contact.company);
+  const displayName = buildAgentDisplayName(selectedAgent, contact.companyName);
 
   try {
-    const { promptBody, promptJq } = await generateAgentPrompt({
+    const { promptJq } = await generateAgentPrompt({
       selectedAgent,
       contact,
       analysis: body.analysis ?? null,
@@ -163,8 +218,6 @@ export async function POST(req: NextRequest) {
         success: true,
         mode: "draft",
         displayName,
-        generatedIntent,
-        promptPreview: promptBody,
         statusMessage:
           "Your build brief is ready. Add net2phone build credentials to create the agent directly from this flow.",
       });
@@ -173,9 +226,8 @@ export async function POST(req: NextRequest) {
     const agent = await buildNet2PhoneAgent({
       contact: {
         email: contact.email,
-        firstName: contact.firstName,
-        lastName: contact.lastName,
-        companyName: contact.company,
+        fullName: contact.fullName,
+        companyName: contact.companyName,
         phoneNumber: contact.phone,
       },
       displayName,
@@ -188,8 +240,6 @@ export async function POST(req: NextRequest) {
       displayName: agent.agentName,
       agentId: agent.agentId,
       companyPhoneNumber: agent.companyPhoneNumber,
-      generatedIntent,
-      promptPreview: promptBody,
       statusMessage: "Your agent has been created inside net2phone AI.",
     });
   } catch (error) {

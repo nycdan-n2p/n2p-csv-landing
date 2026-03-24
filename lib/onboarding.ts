@@ -15,14 +15,11 @@ export interface OnboardingQuestion {
 }
 
 export interface OnboardingContact {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
-  company: string;
+  companyName: string;
   phone: string;
-  website?: string;
-  teamSize?: string;
-  phoneSystem?: string;
+  companyWebsite: string;
 }
 
 export type OnboardingAnswers = Record<string, string>;

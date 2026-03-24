@@ -36,18 +36,16 @@ export function OnboardingFlow({
   const [questionError, setQuestionError] = useState("");
   const [questionsLoading, setQuestionsLoading] = useState(true);
   const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [buildStage, setBuildStage] = useState(0);
   const [buildResult, setBuildResult] = useState<BuildAgentResponse | null>(null);
   const [questionRequestKey, setQuestionRequestKey] = useState(0);
   const [contact, setContact] = useState<OnboardingContactState>({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
-    company: "",
+    companyName: "",
     phone: "",
-    website: "",
-    teamSize: "",
-    phoneSystem: "",
+    companyWebsite: "",
   });
 
   const findings = useMemo(() => {
@@ -127,20 +125,28 @@ export function OnboardingFlow({
     setStep("details");
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     setSubmitError("");
+    setIsSubmitting(true);
     setStep("building");
     setBuildStage(0);
 
     const generatedIntent = buildAgentIntent(selectedAgent, analysis, questions, answers);
+    const nameParts = contact.fullName.trim().split(/\s+/).filter(Boolean);
 
     try {
       const leadRes = await fetch("/api/submit-lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contact,
+          contact: {
+            firstName: nameParts[0] ?? "",
+            lastName: nameParts.slice(1).join(" "),
+            email: contact.email,
+            company: contact.companyName,
+            phone: contact.phone,
+            website: contact.companyWebsite,
+          },
           selectedAgent,
           analysis:
             analysis ?? undefined,
@@ -169,6 +175,8 @@ export function OnboardingFlow({
           questions,
           answers,
           contact,
+          emailVerified: true,
+          phoneVerified: true,
         }),
       });
 
@@ -182,6 +190,8 @@ export function OnboardingFlow({
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Agent build failed.");
       setStep("details");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -266,7 +276,7 @@ export function OnboardingFlow({
             <AccountStep
               contact={contact}
               error={submitError}
-              isSubmitting={false}
+              isSubmitting={isSubmitting}
               onChange={handleContactChange}
               onBack={() => setStep("questions")}
               onSubmit={handleSubmit}
