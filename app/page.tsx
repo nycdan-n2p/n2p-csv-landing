@@ -116,7 +116,7 @@ export default function HomePage() {
         agentsRecommended?: number;
         recommendedAgents?: string[];
         summary?: string;
-        insights?: unknown;
+        insights?: string[];
       };
       if (!analyzeRes.ok) throw new Error(json.error ?? "Analysis failed");
 
