@@ -13,6 +13,7 @@ export default function HomePage() {
   const [loadingStep, setLoadingStep] = useState(0);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [analysisError, setAnalysisError] = useState("");
+  const [n2pLoading, setN2pLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [starterAgent, setStarterAgent] = useState("");
   const [starterError, setStarterError] = useState("");
@@ -72,6 +73,91 @@ export default function HomePage() {
       setTimeout(() => setLoading(false), 500);
     }
   }, []);
+
+  const fetchAndAnalyzeN2PCDR = useCallback(async () => {
+    setAnalysisError("");
+    setN2pLoading(true);
+    setLoading(true);
+    setLoadingStep(0);
+
+    const stepIds = ["ls1", "ls2", "ls3", "ls4", "ls5"];
+    const iv = setInterval(() => {
+      setLoadingStep((s) => {
+        const next = s + 1;
+        if (next >= stepIds.length) { clearInterval(iv); return s; }
+        return next;
+      });
+    }, 650);
+
+    try {
+      // Retrieve the CSV from the session the OAuth callback created
+      const cdrRes = await fetch("/api/net2phone/cdr");
+      if (!cdrRes.ok) {
+        const json = await cdrRes.json() as { error?: string };
+        throw new Error(json.error ?? "Could not retrieve your call history");
+      }
+      const csvText = await cdrRes.text();
+
+      // Run the same AI analysis as the file-upload path
+      const analyzeRes = await fetch("/api/analyze-cdr", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ csvText }),
+      });
+
+      clearInterval(iv);
+      setLoadingStep(4);
+
+      const json = await analyzeRes.json() as {
+        error?: string;
+        missedRate?: number;
+        shortCallsPct?: number;
+        afterHoursPct?: number;
+        agentsRecommended?: number;
+        recommendedAgents?: string[];
+        summary?: string;
+        insights?: unknown;
+      };
+      if (!analyzeRes.ok) throw new Error(json.error ?? "Analysis failed");
+
+      setAnalysisResult({
+        missedRate: json.missedRate ?? 0,
+        shortCallsPct: json.shortCallsPct ?? 0,
+        afterHoursPct: json.afterHoursPct ?? 0,
+        agentsRecommended: json.agentsRecommended ?? 0,
+        recommendedAgents: json.recommendedAgents ?? [],
+        summary: json.summary ?? "",
+        insights: json.insights,
+      });
+    } catch (e) {
+      clearInterval(iv);
+      setAnalysisError(e instanceof Error ? e.message : "Analysis failed");
+    } finally {
+      setN2pLoading(false);
+      setTimeout(() => setLoading(false), 500);
+    }
+  }, []);
+
+  // Detect ?n2p_connected=1 or ?n2p_error=... after OAuth redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const connected = params.get("n2p_connected");
+    const error = params.get("n2p_error");
+
+    if (connected === "1") {
+      window.history.replaceState({}, "", window.location.pathname);
+      void fetchAndAnalyzeN2PCDR();
+    } else if (error) {
+      window.history.replaceState({}, "", window.location.pathname);
+      const messages: Record<string, string> = {
+        not_configured: "net2phone connection is not yet enabled. Please upload a file instead.",
+        invalid_state: "The login session expired. Please try connecting again.",
+        auth_failed: "Could not sign in to net2phone. Please try again.",
+      };
+      setAnalysisError(messages[error] ?? "net2phone connection failed. Please try again.");
+      document.getElementById("analyzer")?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [fetchAndAnalyzeN2PCDR]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -262,94 +348,140 @@ export default function HomePage() {
             <ul className="analyzer-steps">
               <li>
                 <div className="step-badge">1</div>
-                Export your CDR from net2phone (or any UCaaS platform) as a CSV file
+                Connect your net2phone account with one click — or export your call history as a
+                CSV from net2phone, RingCentral, 8x8, or Zoom Phone
               </li>
               <li>
                 <div className="step-badge">2</div>
-                Upload it here — we detect missed calls, short calls, after-hours gaps, and repeat
-                caller patterns
+                Our AI scans every call: missed, short, after-hours, and repeat-caller patterns
               </li>
               <li>
                 <div className="step-badge">3</div>
-                Receive a prioritized report with specific AI agent recommendations and expected ROI
+                Get a prioritized report with specific AI agent recommendations and the revenue
+                impact you can expect
               </li>
             </ul>
             <p style={{ fontSize: 13 }}>
-              Works with net2phone, RingCentral, 8x8, Zoom Phone, and any standard CDR export. No
-              account access required.
+              Works with net2phone, RingCentral, 8x8, Zoom Phone, and any standard call-history
+              export. No manual setup required.
             </p>
           </div>
 
           <div>
             {!analysisResult && (
-              <div className="upload-card">
-                <div
-                  id="uploadZone"
-                  className="upload-zone"
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    e.currentTarget.classList.add("drag-over");
-                  }}
-                  onDragLeave={(e) => e.currentTarget.classList.remove("drag-over")}
-                  onDrop={handleDrop}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".csv,text/csv"
-                    className="sr-only"
-                    onChange={handleFileSelect}
-                    aria-hidden
-                  />
-                  <div className="upload-icon">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <div className="upload-paths">
+                {/* Path A — upload a file */}
+                <div className="upload-card">
+                  <div className="upload-path-label">Don&apos;t have a file?</div>
+                  <div
+                    id="uploadZone"
+                    className="upload-zone"
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.currentTarget.classList.add("drag-over");
+                    }}
+                    onDragLeave={(e) => e.currentTarget.classList.remove("drag-over")}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".csv,text/csv"
+                      className="sr-only"
+                      onChange={handleFileSelect}
+                      aria-hidden
+                    />
+                    <div className="upload-icon">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path
+                          d="M10 3v10M7 6l3-3 3 3"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M3 13v2a2 2 0 002 2h10a2 2 0 002-2v-2"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+                    <h3>Drop your call history CSV here</h3>
+                    <p>or click to browse</p>
+                  </div>
+                  <div className="format-tags">
+                    <span className="format-tag">CSV</span>
+                    <span className="format-tag">net2phone export</span>
+                    <span className="format-tag">Any UCaaS format</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="upload-btn"
+                    onClick={handleAnalyzeClick}
+                    disabled={loading || n2pLoading}
+                  >
+                    {loading && !n2pLoading ? "Analyzing…" : "Analyze my calls →"}
+                  </button>
+                  {analysisError && (
+                    <div className="upload-error" role="alert">
+                      {analysisError}
+                    </div>
+                  )}
+                  <div className="upload-privacy">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                       <path
-                        d="M10 3v10M7 6l3-3 3 3"
+                        d="M6 1L2 3v3c0 2.5 1.8 4.3 4 5 2.2-.7 4-2.5 4-5V3L6 1z"
                         stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3 13v2a2 2 0 002 2h10a2 2 0 002-2v-2"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
+                        strokeWidth="1"
+                        fill="none"
                       />
                     </svg>
+                    Your data is never stored or shared
                   </div>
-                  <h3>Drop your CDR file here</h3>
-                  <p>or click to browse</p>
                 </div>
-                <div className="format-tags">
-                  <span className="format-tag">CSV</span>
-                  <span className="format-tag">net2phone export</span>
-                  <span className="format-tag">Any CDR format</span>
-                </div>
-                <button
-                  type="button"
-                  className="upload-btn"
-                  onClick={handleAnalyzeClick}
-                  disabled={loading}
-                >
-                  {loading ? "Analyzing…" : "Analyze my calls →"}
-                </button>
-                {analysisError && (
-                  <div className="upload-error" role="alert">
-                    {analysisError}
+
+                {/* Path B — existing net2phone customer */}
+                <div className="upload-card upload-card-n2p">
+                  <div className="upload-path-label">Already a net2phone customer?</div>
+                  <div className="n2p-connect-inner">
+                    <div className="n2p-connect-logo">
+                      <div className="nav-logo-mark" style={{ fontSize: 20, width: 36, height: 36 }}>2</div>
+                    </div>
+                    <h3 className="n2p-connect-heading">Pull your call data automatically</h3>
+                    <p className="n2p-connect-body">
+                      Sign in with your net2phone account and we&apos;ll fetch your recent call
+                      history instantly — no export, no file hunting.
+                    </p>
+                    <a
+                      href="/api/auth/net2phone/authorize"
+                      className={`upload-btn n2p-connect-btn${n2pLoading ? " n2p-btn-loading" : ""}`}
+                      aria-disabled={n2pLoading}
+                      onClick={(e) => { if (n2pLoading) e.preventDefault(); }}
+                    >
+                      {n2pLoading ? (
+                        <>
+                          <span className="n2p-spinner" />
+                          Fetching your call data…
+                        </>
+                      ) : (
+                        "Connect my net2phone account →"
+                      )}
+                    </a>
+                    <div className="upload-privacy" style={{ marginTop: 12 }}>
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path
+                          d="M6 1L2 3v3c0 2.5 1.8 4.3 4 5 2.2-.7 4-2.5 4-5V3L6 1z"
+                          stroke="currentColor"
+                          strokeWidth="1"
+                          fill="none"
+                        />
+                      </svg>
+                      Read-only access · session expires after 5 minutes
+                    </div>
                   </div>
-                )}
-                <div className="upload-privacy">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path
-                      d="M6 1L2 3v3c0 2.5 1.8 4.3 4 5 2.2-.7 4-2.5 4-5V3L6 1z"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                      fill="none"
-                    />
-                  </svg>
-                  Your data is never stored or shared
                 </div>
               </div>
             )}

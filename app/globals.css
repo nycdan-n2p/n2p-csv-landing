@@ -299,6 +299,19 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.4); }
 .prompt-preview-header span:last-child { color: rgba(255,255,255,0.46); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
 .prompt-preview-card p { color: rgba(255,255,255,0.74); font-size: 14px; line-height: 1.8; }
 
+/* Two-path upload UI */
+.upload-paths { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.upload-path-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 10px; }
+.upload-card-n2p { display: flex; flex-direction: column; }
+.n2p-connect-inner { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 8px 0; flex: 1; justify-content: center; gap: 0; }
+.n2p-connect-logo { width: 52px; height: 52px; border-radius: 16px; background: var(--n2p-gradient); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; box-shadow: 0 8px 24px rgba(124,58,237,0.28); }
+.n2p-connect-heading { color: var(--n2p-white); font-size: 17px; font-weight: 700; line-height: 1.3; margin: 0 0 10px; }
+.n2p-connect-body { color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.6; margin: 0 0 20px; max-width: 240px; }
+.n2p-connect-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; width: 100%; }
+.n2p-connect-btn.n2p-btn-loading { opacity: 0.7; pointer-events: none; }
+.n2p-spinner { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; animation: spin 0.75s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
 @media (max-width: 900px) {
@@ -319,6 +332,7 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.4); }
   .onboarding-main { padding: 32px 24px 40px; }
   .onboarding-step { padding-right: 0; }
   .onboarding-form-grid, .reveal-grid, .verification-grid { grid-template-columns: 1fr; }
+  .upload-paths { grid-template-columns: 1fr; }
   .onboarding-field-wide { grid-column: span 1; }
   .onboarding-step-header h2 { max-width: none; font-size: 34px; }
 }
