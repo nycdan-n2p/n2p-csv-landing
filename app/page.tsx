@@ -369,119 +369,95 @@ export default function HomePage() {
 
           <div>
             {!analysisResult && (
-              <div className="upload-paths">
-                {/* Path A — upload a file */}
-                <div className="upload-card">
-                  <div className="upload-path-label">Don&apos;t have a file?</div>
-                  <div
-                    id="uploadZone"
-                    className="upload-zone"
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      e.currentTarget.classList.add("drag-over");
-                    }}
-                    onDragLeave={(e) => e.currentTarget.classList.remove("drag-over")}
-                    onDrop={handleDrop}
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept=".csv,text/csv"
-                      className="sr-only"
-                      onChange={handleFileSelect}
-                      aria-hidden
-                    />
-                    <div className="upload-icon">
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path
-                          d="M10 3v10M7 6l3-3 3 3"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M3 13v2a2 2 0 002 2h10a2 2 0 002-2v-2"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </div>
-                    <h3>Drop your call history CSV here</h3>
-                    <p>or click to browse</p>
-                  </div>
-                  <div className="format-tags">
-                    <span className="format-tag">CSV</span>
-                    <span className="format-tag">net2phone export</span>
-                    <span className="format-tag">Any UCaaS format</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="upload-btn"
-                    onClick={handleAnalyzeClick}
-                    disabled={loading || n2pLoading}
-                  >
-                    {loading && !n2pLoading ? "Analyzing…" : "Analyze my calls →"}
-                  </button>
-                  {analysisError && (
-                    <div className="upload-error" role="alert">
-                      {analysisError}
-                    </div>
-                  )}
-                  <div className="upload-privacy">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <div className="upload-card">
+                <div
+                  id="uploadZone"
+                  className="upload-zone"
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.add("drag-over");
+                  }}
+                  onDragLeave={(e) => e.currentTarget.classList.remove("drag-over")}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".csv,text/csv"
+                    className="sr-only"
+                    onChange={handleFileSelect}
+                    aria-hidden
+                  />
+                  <div className="upload-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <path
-                        d="M6 1L2 3v3c0 2.5 1.8 4.3 4 5 2.2-.7 4-2.5 4-5V3L6 1z"
+                        d="M10 3v10M7 6l3-3 3 3"
                         stroke="currentColor"
-                        strokeWidth="1"
-                        fill="none"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M3 13v2a2 2 0 002 2h10a2 2 0 002-2v-2"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
                       />
                     </svg>
-                    Your data is never stored or shared
                   </div>
+                  <h3>Drop your call history here</h3>
+                  <p>or click to browse</p>
+                </div>
+                <div className="format-tags">
+                  <span className="format-tag">CSV</span>
+                  <span className="format-tag">net2phone export</span>
+                  <span className="format-tag">Any UCaaS format</span>
+                </div>
+                <button
+                  type="button"
+                  className="upload-btn"
+                  onClick={handleAnalyzeClick}
+                  disabled={loading || n2pLoading}
+                >
+                  {loading && !n2pLoading ? "Analyzing…" : "Analyze my calls →"}
+                </button>
+
+                <div className="upload-or-divider">
+                  <span>or</span>
                 </div>
 
-                {/* Path B — existing net2phone customer */}
-                <div className="upload-card upload-card-n2p">
-                  <div className="upload-path-label">Already a net2phone customer?</div>
-                  <div className="n2p-connect-inner">
-                    <div className="n2p-connect-logo">
-                      <div className="nav-logo-mark" style={{ fontSize: 20, width: 36, height: 36 }}>2</div>
-                    </div>
-                    <h3 className="n2p-connect-heading">Pull your call data automatically</h3>
-                    <p className="n2p-connect-body">
-                      Sign in with your net2phone account and we&apos;ll fetch your recent call
-                      history instantly — no export, no file hunting.
-                    </p>
-                    <a
-                      href="/api/auth/net2phone/authorize"
-                      className={`upload-btn n2p-connect-btn${n2pLoading ? " n2p-btn-loading" : ""}`}
-                      aria-disabled={n2pLoading}
-                      onClick={(e) => { if (n2pLoading) e.preventDefault(); }}
-                    >
-                      {n2pLoading ? (
-                        <>
-                          <span className="n2p-spinner" />
-                          Fetching your call data…
-                        </>
-                      ) : (
-                        "Connect my net2phone account →"
-                      )}
-                    </a>
-                    <div className="upload-privacy" style={{ marginTop: 12 }}>
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path
-                          d="M6 1L2 3v3c0 2.5 1.8 4.3 4 5 2.2-.7 4-2.5 4-5V3L6 1z"
-                          stroke="currentColor"
-                          strokeWidth="1"
-                          fill="none"
-                        />
-                      </svg>
-                      Read-only access · session expires after 5 minutes
-                    </div>
+                <a
+                  href="/api/auth/net2phone/authorize"
+                  className={`upload-btn upload-btn-outline n2p-connect-btn${n2pLoading ? " n2p-btn-loading" : ""}`}
+                  aria-disabled={n2pLoading}
+                  onClick={(e) => { if (n2pLoading) e.preventDefault(); }}
+                >
+                  {n2pLoading ? (
+                    <>
+                      <span className="n2p-spinner" />
+                      Fetching your call data…
+                    </>
+                  ) : (
+                    "I'm a net2phone customer — connect my account →"
+                  )}
+                </a>
+
+                {analysisError && (
+                  <div className="upload-error" role="alert">
+                    {analysisError}
                   </div>
+                )}
+                <div className="upload-privacy">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path
+                      d="M6 1L2 3v3c0 2.5 1.8 4.3 4 5 2.2-.7 4-2.5 4-5V3L6 1z"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      fill="none"
+                    />
+                  </svg>
+                  Your data is never stored or shared
                 </div>
               </div>
             )}
