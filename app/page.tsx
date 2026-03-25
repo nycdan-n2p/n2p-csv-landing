@@ -336,7 +336,7 @@ export default function HomePage() {
         <div className="analyzer-inner">
           <div className="analyzer-copy">
             <div className="section-label">
-              Free CDR analysis
+              Free call records analysis
             </div>
             <h2>
               Upload your call history. Get your <em>AI blueprint.</em>
@@ -625,7 +625,7 @@ export default function HomePage() {
           <div className="section-label">AI agent library</div>
           <h2>Popular agents for calling. Or build any agent you need.</h2>
           <p>
-            These six are common starting points for call-related gaps. Based on your CDR, we recommend
+            These six are common starting points for call-related gaps. Based on your call records, we recommend
             which make sense — but you can create any AI agent on net2phone AI.
           </p>
           <div className="agents-grid">
@@ -749,7 +749,7 @@ export default function HomePage() {
           </div>
           <div className="testimonial">
             <p className="testimonial-quote">
-              &quot;The CDR analysis alone was worth it. I had no idea 40% of our answered calls
+              &quot;The call records analysis alone was worth it. I had no idea 40% of our answered calls
               were under 10 seconds. That&apos;s a routing problem we didn&apos;t know we had.&quot;
             </p>
             <div className="testimonial-author">
@@ -786,7 +786,7 @@ export default function HomePage() {
           Your next customer is calling <em>right now.</em>
         </h2>
         <p>
-          Start with the free CDR analysis — or create your AI agent and deploy in days.
+          Start with the free call records analysis — or create your AI agent and deploy in days.
         </p>
         <div className="cta-actions">
           <a href="#analyzer" className="btn-white">
@@ -852,7 +852,7 @@ export default function HomePage() {
             <div>
               <h2 id="modalTitle">Create your agent now</h2>
               <p className="modal-sub">
-                Start with a CDR recommendation or pick any agent, then continue through the same
+                Start with a recommendation from your call records or pick any agent, then continue through the same
                 guided build flow inside this experience.
               </p>
             </div>
